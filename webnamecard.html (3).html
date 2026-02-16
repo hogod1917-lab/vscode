@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Professional Profile</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* [1] CSS 디자인 영역: 스타일만 있어야 합니다 */
+        :root {
+            --primary-color: #2d3436;
+            --accent-color: #0984e3;
+            --bg-gradient: linear-gradient(120deg, #fdfbfb 0%, #ebedee 100%);
+        }
+
+        body {
+            font-family: 'Nanum Gothic', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: var(--bg-gradient);
+            perspective: 1000px; /* 입체 효과용 */
+            overflow: hidden;    /* 폭죽이 화면 밖으로 나갈 때 스크롤 방지 */
+        }
+
+        .profile-card {
+            background: #ffffff;
+            width: 90%;
+            max-width: 400px;
+            padding: 40px 20px;
+            border-radius: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: transform 0.1s ease-out;
+            transform-style: preserve-3d;
+            position: relative;
+            z-index: 2;
+        }
+
+        .image-container {
+            width: 150px;
+            height: 150px;
+            margin: 0 auto 20px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 5px solid #fff;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        h1 { font-size: 24px; color: var(--primary-color); margin: 10px 0; }
+        .job-title { color: var(--accent-color); font-weight: bold; font-size: 16px; margin-bottom: 20px; }
+        .bio { font-size: 14px; color: #636e72; line-height: 1.6; margin-bottom: 30px; }
+
+        .links { display: flex; flex-direction: column; gap: 12px; }
+        .link-btn {
+            text-decoration: none;
+            color: white;
+            background: var(--primary-color);
+            padding: 12px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+        .link-btn:hover { background: var(--accent-color); transform: scale(1.02); }
+
+        /* 폭죽(파티클) 스타일 */
+        .particle {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 999;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="profile-card">
+        <div class="image-container">
+            <img src="https://images.unsplash.com/photo-1769427470211-413623a9333b?q=80&w=689&auto=format&fit=crop" alt="Profile Image">
+        </div>
+
+        <h1>홍길동</h1>
+        <div class="job-title">Creative Developer</div>
+        
+        <p class="bio">
+            안녕하세요! 깔끔하고 감각적인 <br>
+            결과물을 만드는 것을 좋아합니다. <br>
+            화면을 클릭하거나 마우스를 움직여보세요!
+        </p>
+
+        <div class="links">
+            <a href="#" class="link-btn">Portfolio</a>
+            <a href="mailto:your-email@gmail.com" class="link-btn" style="background: #0984e3;">Email Me</a>
+            <a href="#" class="link-btn" style="background: #000;">GitHub</a>
+        </div>
+    </div>
+
+    <script>
+        const card = document.querySelector('.profile-card');
+        const container = document.body;
+
+        // 마우스 틸트 효과
+        container.addEventListener('mousemove', (e) => {
+            let xAxis = (window.innerWidth / 2 - e.pageX) / 25;
+            let yAxis = (window.innerHeight / 2 - e.pageY) / 25;
+            card.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
+        });
+
+        container.addEventListener('mouseleave', () => {
+            card.style.transform = `rotateY(0deg) rotateX(0deg)`;
+            card.style.transition = "all 0.5s ease";
+        });
+
+        container.addEventListener('mouseenter', () => {
+            card.style.transition = "none";
+        });
+
+        // 클릭 시 폭죽 효과
+        document.addEventListener('click', (e) => {
+            for (let i = 0; i < 15; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                document.body.appendChild(particle);
+
+                const colors = ['#0984e3', '#00cec9', '#6c5ce7', '#fab1a0', '#fdcb6e'];
+                const size = Math.random() * 8 + 4;
+                
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+
+                const destX = e.clientX + (Math.random() - 0.5) * 250;
+                const destY = e.clientY + (Math.random() - 0.5) * 250;
+
+                particle.animate([
+                    { transform: `translate(${e.clientX}px, ${e.clientY}px)`, opacity: 1 },
+                    { transform: `translate(${destX}px, ${destY}px)`, opacity: 0 }
+                ], {
+                    duration: 800,
+                    easing: 'ease-out',
+                    fill: 'forwards'
+                }).onfinish = () => particle.remove();
+            }
+        });
+    </script>
+</body>
+</html>
